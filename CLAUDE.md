@@ -1,8 +1,13 @@
-# CLAUDE.md — GBP-Review-Manager
+# CLAUDE.md — GBP-Review-Manager (backend)
 
 ## Project overview
 
-Automated Google Business Review Saas Tools 
+Automated Google Business Review Saas Tools — **dépôt backend uniquement**.
+
+Depuis mai 2026 le frontend a été migré vers le dépôt voisin
+[`~/Projects/gbp-pilot-review-website/`](../gbp-pilot-review-website/) (Next.js 15
+unifié marketing + SaaS). Ce dépôt ne contient plus que l'API FastAPI, les
+workers Celery, le bot Telegram et les migrations Alembic.
 
 See [North_Star.md](North_Star.md) for full business context and [roadmap.md](roadmap.md) for phased implementation plan.
 

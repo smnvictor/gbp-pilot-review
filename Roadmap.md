@@ -153,34 +153,38 @@ Roadmap complète et chronologique pour le développement, le déploiement et le
 
 ---
 
-## Phase 4 — Développement frontend client
+## Phase 4 — Développement frontend client ✅ (migré hors dépôt)
 
-### Pages publiques
-- Landing page avec proposition de valeur
-- Page pricing
-- Page about
-- Pages légales (Terms, Privacy, DPA)
-- Formulaire de contact / demande de démo
+> **Mai 2026** : Le frontend a été migré vers le dépôt voisin
+> [`~/Projects/gbp-pilot-review-website/`](../gbp-pilot-review-website/) après une
+> refonte complète de la charte graphique (Fraunces + Inter, palette marine `#0B1E3F`,
+> design Astro 5 porté en Next.js 15). Le périmètre couvert :
 
-### Flow d'inscription et onboarding
-- Inscription et vérification email
-- Redirection vers OAuth Google
-- Écran de bienvenue et explication du fonctionnement
-- Formulaire guidé de customisation (contexte, ton, préférences)
+### Pages publiques ✅ (dans `gbp-pilot-review-website/app/(marketing)/`)
+- Landing page (Home) avec hero + steps + testimonials + targets + CTA
+- Pages Features, Pricing (3 plans + FAQ), About, Contact (Formspree)
+- Pages légales : Terms, Privacy, Mentions légales, DPA
+- Formulaire de contact via Formspree (statique)
 
-### Dashboard client
-- Page d'accueil avec métriques
-- Page historique des avis avec filtres
-- Page des avis en attente d'action
-- Page de détail d'un avis avec actions (valider, refuser, regénérer, rédiger)
-- Page de configuration (préférences, filtres, horaires, canal de notif)
-- Page d'abonnement (gestion via Lemon Squeezy)
+### Flow d'inscription et onboarding ✅
+- `/signup` + `/verify-email` + `/login` + `/forgot-password` + `/reset-password`
+- Stepper `/onboarding/{welcome,connect-google,connected,customize,complete}`
 
-### Composants transversaux
-- Système de notifications in-app
-- Gestion des états de chargement et erreurs
-- Responsive design mobile-first
-- Internationalisation next-intl (structure prête, français seul activé)
+### Dashboard client ✅
+- `/dashboard` (métriques calculées côté front depuis `/reviews`)
+- `/reviews` (filtres status, pagination), `/reviews/[id]`
+- `/pending`, `/settings` (4 onglets), `/billing` (Lemon Squeezy)
+
+### Composants transversaux ✅
+- Gestion des états de chargement (`loading.tsx`) et erreurs (`error.tsx`, `not-found.tsx`)
+- Responsive design mobile-first (CSS modules + Tailwind)
+- i18n : **FR uniquement** au lancement (next-intl retiré pour simplifier — réintégrable plus tard)
+
+### Gaps backend à résoudre (cf. README.md)
+- Endpoint `GET /reviews/{id}/responses` (réponse active) → débloque `/reviews/[id]`
+- Customisation IA fine (tone, signature) → hors-scope Phase 4
+- Endpoint `/api/v1/metrics` → métriques actuellement calculées côté front
+- Notifications in-app → reportées Phase 5
 
 ---
 

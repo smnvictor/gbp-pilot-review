@@ -13,12 +13,20 @@ Outils à installer avant tout :
 | Python | 3.12+ | Runtime backend |
 | `uv` | 0.11+ | Gestionnaire de paquets et venv |
 | Docker + Docker Compose | dernière | Postgres + Redis en local |
+| Node.js | 20+ | Runtime frontend (Next.js) — dans le dépôt voisin `gbp-pilot-review-website/` |
+| `pnpm` | 9+ | Gestionnaire de paquets frontend — idem |
 | Git | n'importe quelle | clonage |
 
 Installation `uv` (Linux/macOS) :
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Installation `pnpm` (Linux/macOS) :
+
+```bash
+curl -fsSL https://get.pnpm.io/install.sh | sh -
 ```
 
 ---
@@ -240,7 +248,41 @@ curl -sX POST http://localhost:8000/api/v1/auth/signup \
 
 ---
 
-## 8. Lancer les workers Celery
+## 8. Frontend (dépôt séparé)
+
+Depuis mai 2026 le frontend vit dans le dépôt voisin
+[`~/Projects/gbp-pilot-review-website/`](../gbp-pilot-review-website/) (Next.js 15
+unifié marketing + SaaS). Voir son propre [`README.md`](../gbp-pilot-review-website/README.md)
+pour l'installation pas-à-pas.
+
+Résumé :
+
+```bash
+cd ~/Projects/gbp-pilot-review-website
+pnpm install
+cp .env.example .env.local
+# éditer .env.local :
+#   NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+#   AUTH_SECRET=$(openssl rand -base64 32)
+#   NEXT_PUBLIC_FORMSPREE_ENDPOINT=https://formspree.io/f/YOUR_FORM_ID
+pnpm dev                       # http://localhost:3000
+```
+
+⚠️ Côté backend, vérifier que `FRONTEND_URL=http://localhost:3000` dans `backend/.env`
+(CORS strict).
+
+Quality gates frontend (dans le dépôt frontend) :
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm test                      # Vitest
+pnpm build                     # vérifie la prod build
+```
+
+---
+
+## 9. Lancer les workers Celery
 
 Deux processus séparés (chacun dans son terminal, ou via tmux/foreman) :
 
@@ -265,20 +307,25 @@ Les jobs périodiques configurés (cf. `backend/app/celery_app.py`) :
 
 ---
 
-## 9. Quality gates
+## 10. Quality gates
 
 Avant chaque commit (cf. CLAUDE.md) :
 
 ```bash
+# Backend
 cd backend
 uv run ruff check .       # lint
 uv run mypy app           # type check strict
 uv run pytest             # tests + couverture
+
+# Frontend (dépôt voisin)
+cd ~/Projects/gbp-pilot-review-website
+pnpm lint && pnpm typecheck && pnpm test && pnpm build
 ```
 
 ---
 
-## 10. Troubleshooting
+## 11. Troubleshooting
 
 | Symptôme | Cause probable | Fix |
 |---|---|---|
@@ -287,10 +334,12 @@ uv run pytest             # tests + couverture
 | `connection refused` Postgres | container down ou port collision | `docker compose ps`, `docker compose up -d` |
 | `ModuleNotFoundError: app` lors de `uv run alembic …` | exécuté hors du dossier `backend/` | `cd backend` puis relancer |
 | Tests échouent sur `CITEXT` | extension Postgres manquante | la migration `0001_initial` la crée automatiquement |
+| Frontend : `Missing required env var: NEXT_PUBLIC_BACKEND_URL` | `gbp-pilot-review-website/.env.local` absent ou variable vide | copier `.env.example` vers `.env.local` puis remplir |
+| Frontend : 401 sur toutes les requêtes API | mauvais `NEXT_PUBLIC_BACKEND_URL` ou backend `FRONTEND_URL` ≠ origin frontend (CORS) | aligner les deux URL |
 
 ---
 
-## 11. Pour aller plus loin
+## 12. Pour aller plus loin
 
 - Architecture détaillée : [docs/02-backend.md](docs/02-backend.md)
 - Schéma de données complet : [docs/01-database.md](docs/01-database.md)

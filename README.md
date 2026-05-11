@@ -6,16 +6,28 @@ Google Business Profile Review Manager that allows Business to reply automatical
 
 ## Démarrage rapide
 
+> **Note (mai 2026)** : Le frontend a été extrait dans le dépôt voisin
+> [`~/Projects/gbp-pilot-review-website/`](../gbp-pilot-review-website/) (Next.js 15
+> unifié marketing + SaaS). Ce dépôt ne contient plus que l'API FastAPI, les workers
+> Celery, le bot Telegram et les migrations.
+
 Voir le guide pas-à-pas dans **[setup.md](./setup.md)** (comptes externes, env vars, migrations, lancement).
 
 Résumé express (depuis la racine du repo) :
 
 ```bash
+# Backend
 uv sync                                          # install deps
 cp .env.example backend/.env                     # puis remplir les clés (cf. setup.md)
 docker compose up -d                             # postgres + redis
 cd backend && uv run alembic upgrade head        # créer les 16 tables
 uv run uvicorn app.main:app --reload             # API sur :8000
+
+# Frontend (autre dépôt, autre terminal)
+cd ~/Projects/gbp-pilot-review-website
+pnpm install
+cp .env.example .env.local                       # remplir AUTH_SECRET (openssl rand -base64 32)
+pnpm dev                                         # http://localhost:3000
 ```
 
 ## Modules backend implémentés
@@ -39,6 +51,24 @@ Phase 3 (backend core) **complète** — 15 PRs livrés :
 - **PR 15 — Hardening** : slowapi rate limiting, Sentry SDK conditionnel (FastAPI + Starlette integrations), CORS strict sur `frontend_url`.
 
 Quality gates : `uv run ruff check .` ✓, `uv run mypy app` ✓, `uv run pytest` ✓ (27 tests, ~47% coverage globale, 100% sur `utils/retry`, `security/encryption`, `models/`, `services/notification_templates`).
+
+## Frontend
+
+Le frontend a été extrait (mai 2026) vers le dépôt voisin
+[`~/Projects/gbp-pilot-review-website/`](../gbp-pilot-review-website/) :
+
+- **Stack** : Next.js 15 App Router · React 19 · TypeScript strict · Tailwind v3 · shadcn/ui · NextAuth v5 · TanStack Query v5 · React Hook Form + Zod · Vitest.
+- **Périmètre** : site marketing public (Home, Features, Pricing, About, Contact, Privacy, Terms, Mentions légales, DPA) + SaaS authentifié (auth, onboarding, dashboard, reviews, pending, settings, billing).
+- **Charte graphique** : Fraunces (titres) + Inter (corps), palette marine `#0B1E3F`. Référence visuelle : [`BRIEF.md`](../gbp-pilot-review-website/BRIEF.md).
+- **i18n** : FR uniquement au lancement (la structure next-intl a été retirée pour simplifier).
+- **Build** : 23 pages compilent, 14 tests Vitest passent.
+
+**Gaps backend connus (à résoudre pour finalisation MVP)** :
+1. Affichage de la réponse active dans `/reviews/[id]` nécessite un endpoint `GET /reviews/{id}/responses` ou un champ `active_response_id` dans `ReviewPublic` — composants prêts (`ResponseEditor`, `ResponseActions`, `UndoBanner`), à câbler dès qu'exposé.
+2. Customisation IA fine (tone, signature, must-mention) hors-scope — nécessite extension de `ClientSettingsUpdate` ou endpoint dédié `prompt_profile`.
+3. Endpoint `/api/v1/metrics` non disponible ; métriques dashboard calculées côté front à partir de la liste des avis.
+4. Notifications in-app reportées Phase 5 (pas d'endpoint « liste notifications utilisateur »).
+5. La page `/features` utilise des visuels simplifiés (placeholder) sur les FeatureBlock — les visuels riches du design Astro original (radar, file d'attente animée, etc.) sont à reporter depuis [`_astro-source/src/pages/features.astro`](../gbp-pilot-review-website/_astro-source/src/pages/features.astro).
 
 ## Documentation
 
