@@ -85,7 +85,7 @@ done
 
 # --- 6. Migration de la base ---
 log_info "Application des migrations Alembic..."
-docker compose -f "$COMPOSE_FILE" exec -T api uv run alembic upgrade head
+docker compose -f "$COMPOSE_FILE" exec -T api alembic upgrade head
 
 # --- 7. Affichage final de l'état ---
 log_info "État des services après déploiement :"
