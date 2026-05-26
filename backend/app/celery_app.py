@@ -1,4 +1,5 @@
 from celery import Celery  # type: ignore[import-untyped]
+from celery.schedules import crontab  # type: ignore[import-untyped]
 from celery.signals import task_postrun, task_prerun  # type: ignore[import-untyped]
 
 from app.config import get_settings
@@ -61,11 +62,11 @@ celery_app.conf.update(
         },
         "quota-thresholds": {
             "task": "app.tasks.maintenance_tasks.check_quota_thresholds",
-            "schedule": {"hour": 9, "minute": 0},
+            "schedule": crontab(hour=9, minute=0),
         },
         "purge-expired": {
             "task": "app.tasks.maintenance_tasks.purge_expired_data",
-            "schedule": {"hour": 3, "minute": 15},
+            "schedule": crontab(hour=3, minute=15),
         },
     },
 )
@@ -75,7 +76,6 @@ celery_app.conf.update(
 def _bind_correlation(task_id, task, args, kwargs, **_):  # type: ignore[no-untyped-def]
     cid = (kwargs or {}).pop("__correlation_id", None) or new_correlation_id()
     correlation_id_var.set(cid)
-
 
 @task_postrun.connect
 def _unbind_correlation(**_):  # type: ignore[no-untyped-def]
