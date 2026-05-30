@@ -18,6 +18,8 @@
 # -u : exit si variable non définie
 # -o pipefail : exit si une commande dans un pipe échoue
 set -euo pipefail
+export DOCKER_BUILDKIT=1
+export COMPOSE_DOCKER_CLI_BUILD=1
 
 # --- Constantes ---
 readonly COMPOSE_FILE="docker-compose.prod.yml"
