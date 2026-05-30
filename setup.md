@@ -57,7 +57,8 @@ curl -fsSL https://get.pnpm.io/install.sh | sh -
 2. Crée un store et note son `store_id`.
 3. Génère une API key dans **Settings → API**.
 4. Configure le webhook signing secret (sera utilisé pour vérifier les webhooks entrants).
-5. Notes : `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_WEBHOOK_SECRET`, `LEMONSQUEEZY_STORE_ID`.
+5. Crée un produit avec 3 variantes (Starter / Pro / Business) et note l'`id` numérique de chaque variante (visible dans l'URL du dashboard LS ou via l'API).
+6. Notes : `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_WEBHOOK_SECRET`, `LEMONSQUEEZY_STORE_ID`, `LEMONSQUEEZY_VARIANT_STARTER`, `LEMONSQUEEZY_VARIANT_PRO`, `LEMONSQUEEZY_VARIANT_BUSINESS`. Sans les variantes, `POST /subscription/checkout` renvoie un 503 explicite.
 
 ### 2.4. Resend — emails transactionnels (Phase 3, PR 11)
 
@@ -142,6 +143,9 @@ Toutes les clés sont documentées dans [.env.example](.env.example). Récap :
 | `LEMONSQUEEZY_API_KEY` | oui (PR 12+) | Lemon Squeezy dashboard |
 | `LEMONSQUEEZY_WEBHOOK_SECRET` | oui (PR 12+) | Lemon Squeezy dashboard |
 | `LEMONSQUEEZY_STORE_ID` | oui (PR 12+) | Lemon Squeezy dashboard |
+| `LEMONSQUEEZY_VARIANT_STARTER` | oui (checkout) | Lemon Squeezy dashboard (variant id) |
+| `LEMONSQUEEZY_VARIANT_PRO` | oui (checkout) | Lemon Squeezy dashboard (variant id) |
+| `LEMONSQUEEZY_VARIANT_BUSINESS` | oui (checkout) | Lemon Squeezy dashboard (variant id) |
 | `RESEND_API_KEY` | oui (PR 11+) | Resend dashboard |
 | `RESEND_FROM_EMAIL` | oui (PR 11+) | doit être sur domaine vérifié Resend |
 | `TELEGRAM_BOT_TOKEN` | non | BotFather |
