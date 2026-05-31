@@ -13,6 +13,4 @@ class Regeneration(Base, CreatedAtMixin):
     review_id: Mapped[UUID] = mapped_column(
         ForeignKey("reviews.id", ondelete="CASCADE"), nullable=False
     )
-    requested_by_user_id: Mapped[UUID | None] = mapped_column(
-        ForeignKey("users.id"), nullable=True
-    )
+    requested_by_user_id: Mapped[UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)

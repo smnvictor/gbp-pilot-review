@@ -28,9 +28,7 @@ async def _ensure_owner(session, response, user) -> None:  # type: ignore[no-unt
 
 
 @router.get("/{response_id}", response_model=ResponsePublic)
-async def get_response(
-    response_id: UUID, session: SessionDep, user: CurrentUser
-) -> ResponsePublic:
+async def get_response(response_id: UUID, session: SessionDep, user: CurrentUser) -> ResponsePublic:
     response = await ResponseRepository(session).get(response_id)
     if response is None:
         raise HTTPException(404)
@@ -39,9 +37,7 @@ async def get_response(
 
 
 @router.post("/{response_id}/approve", response_model=ResponsePublic)
-async def approve(
-    response_id: UUID, session: SessionDep, user: CurrentUser
-) -> ResponsePublic:
+async def approve(response_id: UUID, session: SessionDep, user: CurrentUser) -> ResponsePublic:
     response = await ResponseRepository(session).get(response_id)
     if response is None:
         raise HTTPException(404)
@@ -51,9 +47,7 @@ async def approve(
 
 
 @router.post("/{response_id}/cancel", response_model=ResponsePublic)
-async def cancel(
-    response_id: UUID, session: SessionDep, user: CurrentUser
-) -> ResponsePublic:
+async def cancel(response_id: UUID, session: SessionDep, user: CurrentUser) -> ResponsePublic:
     response = await ResponseRepository(session).get(response_id)
     if response is None:
         raise HTTPException(404)
@@ -90,9 +84,7 @@ async def edit(
 
 
 @router.post("/{response_id}/regenerate", response_model=ResponsePublic)
-async def regenerate(
-    response_id: UUID, session: SessionDep, user: CurrentUser
-) -> ResponsePublic:
+async def regenerate(response_id: UUID, session: SessionDep, user: CurrentUser) -> ResponsePublic:
     response = await ResponseRepository(session).get(response_id)
     if response is None:
         raise HTTPException(404)

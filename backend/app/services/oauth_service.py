@@ -117,7 +117,10 @@ class OAuthService:
 
     async def _sync_locations(self, credential: OAuthCredential) -> None:
         google_locations = await self.adapter.list_locations(credential.access_token_encrypted)
-        existing = {loc.google_location_id: loc for loc in await self.locations.list_by_client(credential.client_id)}
+        existing = {
+            loc.google_location_id: loc
+            for loc in await self.locations.list_by_client(credential.client_id)
+        }
         for gl in google_locations:
             # name is "accounts/123/locations/456" — split for storage
             parts = gl.name.split("/")

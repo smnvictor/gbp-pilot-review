@@ -27,9 +27,7 @@ from uuid import UUID
 os.environ.setdefault("ENVIRONMENT", "test")
 os.environ.setdefault("SECRET_KEY", "load-secret")
 os.environ.setdefault("JWT_SECRET", "load-jwt")
-os.environ.setdefault(
-    "OAUTH_TOKEN_ENCRYPTION_KEY", "kHbA6rys1I7sV46M2WI2WY6Sl6NF1m0XRLnXwvTV-HA="
-)
+os.environ.setdefault("OAUTH_TOKEN_ENCRYPTION_KEY", "kHbA6rys1I7sV46M2WI2WY6Sl6NF1m0XRLnXwvTV-HA=")
 os.environ.setdefault(
     "DATABASE_URL", "postgresql+asyncpg://app:dev@localhost:5432/gbp_review_manager_test"
 )
@@ -100,9 +98,7 @@ async def _stage_filter_generate_publish(
     )
     llm = AsyncMock()
     llm.generate = AsyncMock(
-        return_value=LLMResponse(
-            status=1, content="Merci !", details="", model="claude-sonnet-4-6"
-        )
+        return_value=LLMResponse(status=1, content="Merci !", details="", model="claude-sonnet-4-6")
     )
 
     for rid in review_ids:
@@ -188,9 +184,7 @@ async def run(n_clients: int, n_reviews: int) -> dict[str, Any]:
     bootstrap_elapsed = time.perf_counter() - bootstrap_t0
 
     poll_t0 = time.perf_counter()
-    poll_results = await asyncio.gather(
-        *[_stage_polling(cid, n_reviews) for cid, _uid in pairs]
-    )
+    poll_results = await asyncio.gather(*[_stage_polling(cid, n_reviews) for cid, _uid in pairs])
     poll_elapsed = time.perf_counter() - poll_t0
 
     pipeline_t0 = time.perf_counter()

@@ -50,9 +50,7 @@ async def circuits(user: CurrentUser) -> dict[str, str]:
 
 
 @router.get("/oauth-alerts", response_model=list[AdminOAuthCredentialPublic])
-async def oauth_alerts(
-    session: SessionDep, user: CurrentUser
-) -> list[AdminOAuthCredentialPublic]:
+async def oauth_alerts(session: SessionDep, user: CurrentUser) -> list[AdminOAuthCredentialPublic]:
     _ensure_admin(user)
     stmt = (
         select(OAuthCredential, Client.business_name)

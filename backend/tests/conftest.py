@@ -18,7 +18,8 @@ os.environ.setdefault("SECRET_KEY", "test-secret-key")
 os.environ.setdefault("JWT_SECRET", "test-jwt-secret")
 os.environ.setdefault(
     # Generated via: Fernet.generate_key().decode()
-    "OAUTH_TOKEN_ENCRYPTION_KEY", "kHbA6rys1I7sV46M2WI2WY6Sl6NF1m0XRLnXwvTV-HA="
+    "OAUTH_TOKEN_ENCRYPTION_KEY",
+    "kHbA6rys1I7sV46M2WI2WY6Sl6NF1m0XRLnXwvTV-HA=",
 )
 os.environ.setdefault(
     "DATABASE_URL", "postgresql+asyncpg://app:dev@localhost:5432/gbp_review_manager_test"
@@ -194,9 +195,7 @@ def mock_google_adapter() -> AsyncMock:
     )
     adapter.list_reviews = AsyncMock(return_value=([], None))
     adapter.reply_to_review = AsyncMock(
-        return_value=GoogleReviewReplyResult(
-            comment="ok", update_time=datetime.now(UTC)
-        )
+        return_value=GoogleReviewReplyResult(comment="ok", update_time=datetime.now(UTC))
     )
     adapter.delete_reply = AsyncMock(return_value=None)
     return adapter

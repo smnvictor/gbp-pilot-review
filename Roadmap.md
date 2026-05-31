@@ -243,9 +243,9 @@ Backend : migration `0002` ajoute `clients.admin_notes` ; schémas centralisés 
 
 ## Phase 7 — Sécurité et conformité
 
-### Audit sécurité OBLIGATOIRE ET CRUCIAL 
+### Audit sécurité OBLIGATOIRE ET CRUCIAL
 - Revue des permissions et scopes OAuth
-- Vérification du chiffrement des tokens au repos 
+- Vérification du chiffrement des tokens au repos
 - make sure ;env values are not leaking
 - Audit des logs (pas de données sensibles en clair)
 - Protection contre les injections (SQL, XSS, CSRF)
@@ -267,7 +267,7 @@ Backend : migration `0002` ajoute `clients.admin_notes` ; schémas centralisés 
 - Finalisation du dossier de vérification
 - Tournage de la vidéo de démonstration
 - Soumission à Google
-- Suivi et itérations si feedback de Google 
+- Suivi et itérations si feedback de Google
 
 ---
 

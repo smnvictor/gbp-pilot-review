@@ -13,9 +13,7 @@ class NotificationPreferenceRepository(CRUDRepository[NotificationPreference]):
     model = NotificationPreference
 
     async def get_by_client(self, client_id: UUID) -> NotificationPreference | None:
-        stmt = select(NotificationPreference).where(
-            NotificationPreference.client_id == client_id
-        )
+        stmt = select(NotificationPreference).where(NotificationPreference.client_id == client_id)
         return (await self.session.scalars(stmt)).first()
 
 

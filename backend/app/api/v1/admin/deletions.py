@@ -36,9 +36,7 @@ def _get_adapter() -> GoogleBusinessAdapter:
 
 
 @router.post("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def soft_delete_user(
-    user_id: UUID, session: SessionDep, user: CurrentUser
-) -> None:
+async def soft_delete_user(user_id: UUID, session: SessionDep, user: CurrentUser) -> None:
     _ensure_admin(user)
     target = await session.get(User, user_id)
     if target is None:
@@ -55,9 +53,7 @@ async def soft_delete_user(
 
 
 @router.post("/clients/{client_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def soft_delete_client(
-    client_id: UUID, session: SessionDep, user: CurrentUser
-) -> None:
+async def soft_delete_client(client_id: UUID, session: SessionDep, user: CurrentUser) -> None:
     _ensure_admin(user)
     target = await session.get(Client, client_id)
     if target is None:

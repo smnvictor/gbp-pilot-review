@@ -71,14 +71,12 @@ def purge_expired_data() -> int:
                 delete(User).where(User.deleted_at.is_not(None), User.deleted_at < cutoff)
             )
             clients_deleted = await session.execute(
-                delete(Client).where(
-                    Client.deleted_at.is_not(None), Client.deleted_at < cutoff
-                )
+                delete(Client).where(Client.deleted_at.is_not(None), Client.deleted_at < cutoff)
             )
             await session.commit()
-            total = (
-                getattr(users_deleted, "rowcount", 0) or 0
-            ) + (getattr(clients_deleted, "rowcount", 0) or 0)
+            total = (getattr(users_deleted, "rowcount", 0) or 0) + (
+                getattr(clients_deleted, "rowcount", 0) or 0
+            )
             logger.info("Purge RGPD: {n} rows hard-deleted", n=total)
             return total
 

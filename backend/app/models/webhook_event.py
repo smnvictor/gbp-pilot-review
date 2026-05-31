@@ -11,9 +11,7 @@ from app.models.base import Base
 
 class WebhookEvent(Base):
     __tablename__ = "webhook_events"
-    __table_args__ = (
-        UniqueConstraint("provider", "event_id", name="uq_webhook_provider_event"),
-    )
+    __table_args__ = (UniqueConstraint("provider", "event_id", name="uq_webhook_provider_event"),)
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     provider: Mapped[str] = mapped_column(Text, nullable=False, default="lemonsqueezy")
@@ -23,7 +21,5 @@ class WebhookEvent(Base):
     received_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
     )
-    processed_at: Mapped[datetime | None] = mapped_column(
-        TIMESTAMP(timezone=True), nullable=True
-    )
+    processed_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)
     processing_error: Mapped[str | None] = mapped_column(Text, nullable=True)

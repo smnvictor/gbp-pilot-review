@@ -32,9 +32,7 @@ class Notification(Base, CreatedAtMixin):
         ENUM(NotificationStatus, name="notification_status", create_type=True),
         nullable=False,
     )
-    related_review_id: Mapped[UUID | None] = mapped_column(
-        ForeignKey("reviews.id"), nullable=True
-    )
+    related_review_id: Mapped[UUID | None] = mapped_column(ForeignKey("reviews.id"), nullable=True)
     related_response_id: Mapped[UUID | None] = mapped_column(
         ForeignKey("responses.id"), nullable=True
     )

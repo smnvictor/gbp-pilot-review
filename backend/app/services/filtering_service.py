@@ -100,9 +100,7 @@ class FilteringService:
         await self.session.commit()
         return FilterDecision.PROCESSING
 
-    def _handle_no_text(
-        self, review: Review, settings: ClientSettings
-    ) -> FilterDecision:
+    def _handle_no_text(self, review: Review, settings: ClientSettings) -> FilterDecision:
         policy = settings.no_text_review_policy
         if policy == NoTextReviewPolicy.ignore:
             review.status = ReviewStatus.completed

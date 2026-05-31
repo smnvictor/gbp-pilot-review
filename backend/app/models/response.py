@@ -51,7 +51,5 @@ class Response(Base, TimestampMixin, SoftDeleteMixin):
     published_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)
     failed_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)
     failure_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
-    validated_by_user_id: Mapped[UUID | None] = mapped_column(
-        ForeignKey("users.id"), nullable=True
-    )
+    validated_by_user_id: Mapped[UUID | None] = mapped_column(ForeignKey("users.id"), nullable=True)
     validated_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)

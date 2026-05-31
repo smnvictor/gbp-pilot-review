@@ -26,56 +26,100 @@ subscription_tier = postgresql.ENUM(
     "starter", "pro", "business", name="subscription_tier", create_type=False
 )
 subscription_status = postgresql.ENUM(
-    "trial", "active", "past_due", "cancelled", "expired",
-    name="subscription_status", create_type=False,
+    "trial",
+    "active",
+    "past_due",
+    "cancelled",
+    "expired",
+    name="subscription_status",
+    create_type=False,
 )
 oauth_credential_status = postgresql.ENUM(
-    "active", "expiring", "expired", "revoked",
-    name="oauth_credential_status", create_type=False,
+    "active",
+    "expiring",
+    "expired",
+    "revoked",
+    name="oauth_credential_status",
+    create_type=False,
 )
-location_status = postgresql.ENUM(
-    "active", "paused", name="location_status", create_type=False
-)
+location_status = postgresql.ENUM("active", "paused", name="location_status", create_type=False)
 review_status = postgresql.ENUM(
-    "detected", "filtering", "blocked_regex", "requires_human_validation",
-    "processing", "awaiting_response", "completed",
-    name="review_status", create_type=False,
+    "detected",
+    "filtering",
+    "blocked_regex",
+    "requires_human_validation",
+    "processing",
+    "awaiting_response",
+    "completed",
+    name="review_status",
+    create_type=False,
 )
 response_status = postgresql.ENUM(
-    "draft", "pending_validation_client", "pending_validation_team",
-    "awaiting_publication", "scheduled", "publishing", "published",
-    "failed", "cancelled", "superseded",
-    name="response_status", create_type=False,
+    "draft",
+    "pending_validation_client",
+    "pending_validation_team",
+    "awaiting_publication",
+    "scheduled",
+    "publishing",
+    "published",
+    "failed",
+    "cancelled",
+    "superseded",
+    name="response_status",
+    create_type=False,
 )
 response_source = postgresql.ENUM(
-    "ai", "manual_validator", "manual_client",
-    name="response_source", create_type=False,
+    "ai",
+    "manual_validator",
+    "manual_client",
+    name="response_source",
+    create_type=False,
 )
 publish_delay_range = postgresql.ENUM(
-    "1h_2h", "2h_5h", "5h_1d", "1d_2d", "2d_5d",
-    name="publish_delay_range", create_type=False,
+    "1h_2h",
+    "2h_5h",
+    "5h_1d",
+    "1d_2d",
+    "2d_5d",
+    name="publish_delay_range",
+    create_type=False,
 )
 no_text_review_policy = postgresql.ENUM(
-    "ignore", "reply_4_5_only", "reply_all",
-    name="no_text_review_policy", create_type=False,
+    "ignore",
+    "reply_4_5_only",
+    "reply_all",
+    name="no_text_review_policy",
+    create_type=False,
 )
-validation_mode = postgresql.ENUM(
-    "suggestion", "team", name="validation_mode", create_type=False
-)
+validation_mode = postgresql.ENUM("suggestion", "team", name="validation_mode", create_type=False)
 notification_channel = postgresql.ENUM(
     "email", "telegram", "sms", name="notification_channel", create_type=False
 )
 notification_status = postgresql.ENUM(
-    "pending", "deferred", "sent", "failed",
-    name="notification_status", create_type=False,
+    "pending",
+    "deferred",
+    "sent",
+    "failed",
+    name="notification_status",
+    create_type=False,
 )
 
 
 ALL_ENUMS = [
-    user_role, client_status, subscription_tier, subscription_status,
-    oauth_credential_status, location_status, review_status, response_status,
-    response_source, publish_delay_range, no_text_review_policy,
-    validation_mode, notification_channel, notification_status,
+    user_role,
+    client_status,
+    subscription_tier,
+    subscription_status,
+    oauth_credential_status,
+    location_status,
+    review_status,
+    response_status,
+    response_source,
+    publish_delay_range,
+    no_text_review_policy,
+    validation_mode,
+    notification_channel,
+    notification_status,
 ]
 
 
@@ -94,8 +138,12 @@ def upgrade() -> None:
         sa.Column("tone_instructions", sa.Text, nullable=False, server_default=""),
         sa.Column("status", client_status, nullable=False, server_default="active"),
         sa.Column("onboarding_completed_at", sa.TIMESTAMP(timezone=True)),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
-        sa.Column("updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
+        sa.Column(
+            "updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
         sa.Column("deleted_at", sa.TIMESTAMP(timezone=True)),
         sa.UniqueConstraint("slug"),
     )
@@ -115,8 +163,12 @@ def upgrade() -> None:
             postgresql.UUID(as_uuid=True),
             sa.ForeignKey("clients.id", ondelete="SET NULL"),
         ),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
-        sa.Column("updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
+        sa.Column(
+            "updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
         sa.Column("deleted_at", sa.TIMESTAMP(timezone=True)),
         sa.UniqueConstraint("email", name="uq_users_email"),
     )
@@ -140,8 +192,12 @@ def upgrade() -> None:
         sa.Column("current_period_end", sa.TIMESTAMP(timezone=True)),
         sa.Column("cancelled_at", sa.TIMESTAMP(timezone=True)),
         sa.Column("monthly_response_quota", sa.Integer, nullable=False),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
-        sa.Column("updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
+        sa.Column(
+            "updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
         sa.UniqueConstraint("client_id", name="uq_subscriptions_client"),
     )
     op.create_index("ix_subscriptions_status", "subscriptions", ["status"])
@@ -165,7 +221,9 @@ def upgrade() -> None:
         sa.Column("year_month", sa.CHAR(7), nullable=False),
         sa.Column("count", sa.Integer, nullable=False, server_default="0"),
         sa.Column("last_alert_threshold", sa.Integer),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
         sa.UniqueConstraint("client_id", "year_month", name="uq_quota_client_month"),
     )
 
@@ -187,13 +245,15 @@ def upgrade() -> None:
         sa.Column("last_refreshed_at", sa.TIMESTAMP(timezone=True)),
         sa.Column("last_check_at", sa.TIMESTAMP(timezone=True)),
         sa.Column("last_error", sa.Text),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
-        sa.Column("updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
+        sa.Column(
+            "updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
         sa.UniqueConstraint("client_id", name="uq_oauth_client"),
     )
-    op.create_index(
-        "ix_oauth_status_expiry", "oauth_credentials", ["status", "expires_at"]
-    )
+    op.create_index("ix_oauth_status_expiry", "oauth_credentials", ["status", "expires_at"])
 
     op.create_table(
         "locations",
@@ -210,8 +270,12 @@ def upgrade() -> None:
         sa.Column("address", sa.Text),
         sa.Column("primary_category", sa.String),
         sa.Column("status", location_status, nullable=False, server_default="active"),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
-        sa.Column("updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
+        sa.Column(
+            "updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
         sa.UniqueConstraint("google_location_id", name="uq_locations_google_id"),
     )
     op.create_index("ix_locations_client_status", "locations", ["client_id", "status"])
@@ -241,8 +305,12 @@ def upgrade() -> None:
         ),
         sa.Column("status", review_status, nullable=False, server_default="detected"),
         sa.Column("block_reason", sa.Text),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
-        sa.Column("updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
+        sa.Column(
+            "updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
         sa.Column("deleted_at", sa.TIMESTAMP(timezone=True)),
         sa.CheckConstraint("rating BETWEEN 1 AND 5", name="ck_review_rating_range"),
         sa.UniqueConstraint("google_review_id", name="uq_reviews_google_id"),
@@ -271,7 +339,9 @@ def upgrade() -> None:
         sa.Column("max_tokens", sa.Integer, nullable=False, server_default="600"),
         sa.Column("is_active", sa.Boolean, nullable=False, server_default=sa.text("false")),
         sa.Column("notes", sa.Text),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
         sa.UniqueConstraint("version", name="uq_prompt_version"),
     )
     op.create_index(
@@ -317,8 +387,12 @@ def upgrade() -> None:
             sa.ForeignKey("users.id"),
         ),
         sa.Column("validated_at", sa.TIMESTAMP(timezone=True)),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
-        sa.Column("updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
+        sa.Column(
+            "updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
         sa.Column("deleted_at", sa.TIMESTAMP(timezone=True)),
         sa.UniqueConstraint("review_id", "version", name="uq_response_review_version"),
     )
@@ -357,7 +431,9 @@ def upgrade() -> None:
             postgresql.UUID(as_uuid=True),
             sa.ForeignKey("users.id"),
         ),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
     )
     op.create_index("ix_regenerations_review_created", "regenerations", ["review_id", "created_at"])
 
@@ -371,10 +447,14 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.Column("polling_frequency_minutes", sa.Integer, nullable=False, server_default="1440"),
-        sa.Column("publish_delay_range", publish_delay_range, nullable=False, server_default="1d_2d"),
+        sa.Column(
+            "publish_delay_range", publish_delay_range, nullable=False, server_default="1d_2d"
+        ),
         sa.Column("publish_window_start", sa.Time, nullable=False, server_default="09:00"),
         sa.Column("publish_window_end", sa.Time, nullable=False, server_default="21:00"),
-        sa.Column("publish_window_timezone", sa.String, nullable=False, server_default="Europe/Paris"),
+        sa.Column(
+            "publish_window_timezone", sa.String, nullable=False, server_default="Europe/Paris"
+        ),
         sa.Column("language_override", sa.CHAR(2)),
         sa.Column(
             "no_text_review_policy",
@@ -391,8 +471,12 @@ def upgrade() -> None:
             nullable=False,
             server_default="{}",
         ),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
-        sa.Column("updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
+        sa.Column(
+            "updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
         sa.CheckConstraint(
             "publish_window_end > publish_window_start", name="ck_publish_window_order"
         ),
@@ -418,8 +502,12 @@ def upgrade() -> None:
         sa.Column("telegram_chat_id", sa.String),
         sa.Column("telegram_verified_at", sa.TIMESTAMP(timezone=True)),
         sa.Column("sms_phone", sa.String),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
-        sa.Column("updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
+        sa.Column(
+            "updated_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
         sa.UniqueConstraint("client_id", name="uq_notif_pref_client"),
     )
 
@@ -451,7 +539,9 @@ def upgrade() -> None:
         sa.Column("failed_at", sa.TIMESTAMP(timezone=True)),
         sa.Column("error", sa.Text),
         sa.Column("attempts", sa.SmallInteger, nullable=False, server_default="0"),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
     )
     op.create_index(
         "ix_notifications_client_created",
@@ -477,7 +567,9 @@ def upgrade() -> None:
         sa.Column("target_type", sa.Text, nullable=False),
         sa.Column("target_id", postgresql.UUID(as_uuid=True)),
         sa.Column("metadata", postgresql.JSONB, nullable=False, server_default="{}"),
-        sa.Column("created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "created_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
     )
     op.create_index(
         "ix_audit_target",
@@ -521,7 +613,9 @@ def upgrade() -> None:
         sa.Column("event_id", sa.Text, nullable=False),
         sa.Column("event_type", sa.Text, nullable=False),
         sa.Column("payload", postgresql.JSONB, nullable=False),
-        sa.Column("received_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
+        sa.Column(
+            "received_at", sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()
+        ),
         sa.Column("processed_at", sa.TIMESTAMP(timezone=True)),
         sa.Column("processing_error", sa.Text),
         sa.UniqueConstraint("provider", "event_id", name="uq_webhook_provider_event"),

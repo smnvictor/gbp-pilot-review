@@ -31,9 +31,7 @@ class QuotaRepository(CRUDRepository[QuotaUsage]):
         ym = current_year_month()
         usage = await self.get_or_create(client_id, ym)
         await self.session.execute(
-            update(QuotaUsage)
-            .where(QuotaUsage.id == usage.id)
-            .values(count=QuotaUsage.count + 1)
+            update(QuotaUsage).where(QuotaUsage.id == usage.id).values(count=QuotaUsage.count + 1)
         )
         await self.session.flush()
         await self.session.refresh(usage)

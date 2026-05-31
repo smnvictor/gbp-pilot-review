@@ -24,13 +24,9 @@ class Review(Base, TimestampMixin, SoftDeleteMixin):
     comment: Mapped[str | None] = mapped_column(Text, nullable=True)
     language: Mapped[str | None] = mapped_column(CHAR(2), nullable=True)
     posted_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
-    last_edited_at: Mapped[datetime | None] = mapped_column(
-        TIMESTAMP(timezone=True), nullable=True
-    )
+    last_edited_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)
     fetched_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
-    parent_review_id: Mapped[UUID | None] = mapped_column(
-        ForeignKey("reviews.id"), nullable=True
-    )
+    parent_review_id: Mapped[UUID | None] = mapped_column(ForeignKey("reviews.id"), nullable=True)
     status: Mapped[ReviewStatus] = mapped_column(
         ENUM(ReviewStatus, name="review_status", create_type=True),
         nullable=False,

@@ -19,6 +19,4 @@ class DeadLetterJob(Base):
     traceback: Mapped[str | None] = mapped_column(Text, nullable=True)
     attempts: Mapped[int] = mapped_column(SmallInteger, nullable=False)
     failed_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False)
-    replayed_at: Mapped[datetime | None] = mapped_column(
-        TIMESTAMP(timezone=True), nullable=True
-    )
+    replayed_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)

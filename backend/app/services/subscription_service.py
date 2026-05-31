@@ -57,16 +57,11 @@ class SubscriptionService:
             logger.info("Lemon Squeezy event {eid} already processed, skipping", eid=event_id)
             return
 
-        event = await self.record_event(
-            event_id=event_id, event_type=event_type, payload=payload
-        )
+        event = await self.record_event(event_id=event_id, event_type=event_type, payload=payload)
         try:
             data = payload.get("data", {})
             attrs = data.get("attributes", {})
-            custom = (
-                payload.get("meta", {})
-                .get("custom_data", {})
-            )
+            custom = payload.get("meta", {}).get("custom_data", {})
             client_id_str = custom.get("client_id")
             if client_id_str is None:
                 event.processing_error = "Missing client_id in custom_data"
@@ -93,9 +88,7 @@ class SubscriptionService:
         finally:
             await self.session.commit()
 
-    async def _upsert_subscription(
-        self, client_id: UUID, attrs: dict[str, Any]
-    ) -> Subscription:
+    async def _upsert_subscription(self, client_id: UUID, attrs: dict[str, Any]) -> Subscription:
         sub = await self.subs.get_by_client(client_id)
         tier = self._tier_from_attrs(attrs)
         quota = TIER_QUOTAS[tier]

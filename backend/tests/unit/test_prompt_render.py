@@ -36,9 +36,7 @@ def test_render_falls_back_to_settings_language_override() -> None:
     template = "$response_language"
     client = SimpleNamespace(business_name="X", business_context="", tone_instructions="")
     settings = SimpleNamespace(language_override="en")
-    review = SimpleNamespace(
-        language=None, rating=4, comment="ok", reviewer_first_name=None
-    )
+    review = SimpleNamespace(language=None, rating=4, comment="ok", reviewer_first_name=None)
     service = PromptService.__new__(PromptService)
     out = service.render_user_prompt(
         template=template, client=client, settings=settings, review=review

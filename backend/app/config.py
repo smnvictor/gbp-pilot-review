@@ -58,7 +58,6 @@ class Settings(BaseSettings):
 
     undo_grace_period_minutes: int = Field(default=10, ge=1, le=60)
 
-
     @property
     def cors_origins_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]

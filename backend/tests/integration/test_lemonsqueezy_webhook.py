@@ -63,9 +63,7 @@ async def test_webhook_subscription_created_persists(
     assert sub.status == SubscriptionStatus.active
 
 
-async def test_webhook_idempotent_on_replay(
-    client: AsyncClient, db_session: AsyncSession
-) -> None:
+async def test_webhook_idempotent_on_replay(client: AsyncClient, db_session: AsyncSession) -> None:
     _client, _user, _settings, sub, _location, _cred = await create_full_client(db_session)
     payload = {
         "meta": {

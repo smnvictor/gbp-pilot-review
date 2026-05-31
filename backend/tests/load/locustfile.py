@@ -60,9 +60,7 @@ class ClientUser(HttpUser):
 
     @task(3)
     def get_settings(self) -> None:
-        self.client.get(
-            "/api/v1/settings", headers=self.auth_headers, name="GET /settings"
-        )
+        self.client.get("/api/v1/settings", headers=self.auth_headers, name="GET /settings")
 
     @task(1)
     def patch_settings(self) -> None:

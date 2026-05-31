@@ -30,33 +30,25 @@ class CheckoutResponse(BaseModel):
 
 
 @router.get("", response_model=SubscriptionPublic)
-async def get_subscription(
-    session: SessionDep, user: CurrentUser
-) -> SubscriptionPublic:
+async def get_subscription(session: SessionDep, user: CurrentUser) -> SubscriptionPublic:
     if user.client_id is None:
         raise HTTPException(404)
     sub = await SubscriptionRepository(session).get_by_client(user.client_id)
     if sub is None:
         raise HTTPException(404)
-    usage = await QuotaRepository(session).get_or_create(
-        user.client_id, current_year_month()
-    )
+    usage = await QuotaRepository(session).get_or_create(user.client_id, current_year_month())
     return SubscriptionPublic(
         tier=sub.tier.value,
         status=sub.status.value,
         monthly_response_quota=sub.monthly_response_quota,
         quota_used=usage.count,
-        current_period_end=(
-            sub.current_period_end.isoformat() if sub.current_period_end else None
-        ),
+        current_period_end=(sub.current_period_end.isoformat() if sub.current_period_end else None),
         cancelled_at=sub.cancelled_at.isoformat() if sub.cancelled_at else None,
     )
 
 
 @router.post("/checkout", response_model=CheckoutResponse)
-async def checkout(
-    payload: CheckoutRequest, user: CurrentUser
-) -> CheckoutResponse:
+async def checkout(payload: CheckoutRequest, user: CurrentUser) -> CheckoutResponse:
     if user.client_id is None:
         raise HTTPException(404)
     variant_id = get_settings().lemonsqueezy_variant_for_tier(payload.tier.value)

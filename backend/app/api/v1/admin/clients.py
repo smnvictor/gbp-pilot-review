@@ -129,40 +129,50 @@ async def _load_detail(session: SessionDep, client_id: UUID) -> AdminClientDetai
     oauth = await session.scalar(
         select(OAuthCredential).where(OAuthCredential.client_id == client_id)
     )
-    locations_count = await session.scalar(
-        select(func.count(Location.id)).where(Location.client_id == client_id)
-    ) or 0
+    locations_count = (
+        await session.scalar(select(func.count(Location.id)).where(Location.client_id == client_id))
+        or 0
+    )
 
-    reviews_total = await session.scalar(
-        select(func.count(Review.id))
-        .join(Location, Location.id == Review.location_id)
-        .where(Location.client_id == client_id, Review.deleted_at.is_(None))
-    ) or 0
-    published_total = await session.scalar(
-        select(func.count(Response.id))
-        .join(Review, Review.id == Response.review_id)
-        .join(Location, Location.id == Review.location_id)
-        .where(
-            Location.client_id == client_id,
-            Response.status == ResponseStatus.published,
-            Response.deleted_at.is_(None),
+    reviews_total = (
+        await session.scalar(
+            select(func.count(Review.id))
+            .join(Location, Location.id == Review.location_id)
+            .where(Location.client_id == client_id, Review.deleted_at.is_(None))
         )
-    ) or 0
-    pending = await session.scalar(
-        select(func.count(Response.id))
-        .join(Review, Review.id == Response.review_id)
-        .join(Location, Location.id == Review.location_id)
-        .where(
-            Location.client_id == client_id,
-            Response.status.in_(
-                [
-                    ResponseStatus.pending_validation_client,
-                    ResponseStatus.pending_validation_team,
-                ]
-            ),
-            Response.deleted_at.is_(None),
+        or 0
+    )
+    published_total = (
+        await session.scalar(
+            select(func.count(Response.id))
+            .join(Review, Review.id == Response.review_id)
+            .join(Location, Location.id == Review.location_id)
+            .where(
+                Location.client_id == client_id,
+                Response.status == ResponseStatus.published,
+                Response.deleted_at.is_(None),
+            )
         )
-    ) or 0
+        or 0
+    )
+    pending = (
+        await session.scalar(
+            select(func.count(Response.id))
+            .join(Review, Review.id == Response.review_id)
+            .join(Location, Location.id == Review.location_id)
+            .where(
+                Location.client_id == client_id,
+                Response.status.in_(
+                    [
+                        ResponseStatus.pending_validation_client,
+                        ResponseStatus.pending_validation_team,
+                    ]
+                ),
+                Response.deleted_at.is_(None),
+            )
+        )
+        or 0
+    )
 
     return AdminClientDetail(
         id=client.id,
@@ -231,9 +241,7 @@ async def get_metrics(
 
 
 @router.post("/{client_id}/suspend", response_model=AdminClientDetail)
-async def suspend(
-    client_id: UUID, session: SessionDep, user: CurrentUser
-) -> AdminClientDetail:
+async def suspend(client_id: UUID, session: SessionDep, user: CurrentUser) -> AdminClientDetail:
     _ensure_admin(user)
     client = await session.get(Client, client_id)
     if client is None or client.deleted_at is not None:
@@ -251,9 +259,7 @@ async def suspend(
 
 
 @router.post("/{client_id}/reactivate", response_model=AdminClientDetail)
-async def reactivate(
-    client_id: UUID, session: SessionDep, user: CurrentUser
-) -> AdminClientDetail:
+async def reactivate(client_id: UUID, session: SessionDep, user: CurrentUser) -> AdminClientDetail:
     _ensure_admin(user)
     client = await session.get(Client, client_id)
     if client is None or client.deleted_at is not None:

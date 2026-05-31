@@ -64,9 +64,7 @@ def send_pending_digests() -> int:
                 pendings = (await session.scalars(stmt)).all()
                 if not pendings:
                     continue
-                pref = await NotificationPreferenceRepository(session).get_by_client(
-                    cs.client_id
-                )
+                pref = await NotificationPreferenceRepository(session).get_by_client(cs.client_id)
                 if pref is None or pref.email_address is None:
                     continue
                 lines = []
@@ -74,9 +72,11 @@ def send_pending_digests() -> int:
                     _, _, text = render(n.event_type, n.payload or {})
                     lines.append(f"- {text}")
                 body_text = "Récapitulatif des événements:\n\n" + "\n".join(lines)
-                body_html = "<p>Récapitulatif des événements :</p><ul>" + "".join(
-                    f"<li>{line[2:]}</li>" for line in lines
-                ) + "</ul>"
+                body_html = (
+                    "<p>Récapitulatif des événements :</p><ul>"
+                    + "".join(f"<li>{line[2:]}</li>" for line in lines)
+                    + "</ul>"
+                )
                 from app.integrations.resend.client import ResendClient, ResendError
 
                 try:

@@ -20,12 +20,8 @@ class Client(Base, TimestampMixin, SoftDeleteMixin):
     tone: Mapped[list[str]] = mapped_column(
         ARRAY(String), nullable=False, default=list, server_default="{}"
     )
-    always_mention: Mapped[str] = mapped_column(
-        Text, nullable=False, default="", server_default=""
-    )
-    never_mention: Mapped[str] = mapped_column(
-        Text, nullable=False, default="", server_default=""
-    )
+    always_mention: Mapped[str] = mapped_column(Text, nullable=False, default="", server_default="")
+    never_mention: Mapped[str] = mapped_column(Text, nullable=False, default="", server_default="")
     status: Mapped[ClientStatus] = mapped_column(
         ENUM(ClientStatus, name="client_status", create_type=True),
         nullable=False,

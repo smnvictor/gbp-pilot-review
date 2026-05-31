@@ -15,9 +15,7 @@ class ReviewRepository(CRUDRepository[Review]):
         stmt = select(Review).where(Review.google_review_id == google_review_id)
         return (await self.session.scalars(stmt)).first()
 
-    async def list_by_status(
-        self, status: ReviewStatus, limit: int = 100
-    ) -> Sequence[Review]:
+    async def list_by_status(self, status: ReviewStatus, limit: int = 100) -> Sequence[Review]:
         stmt = (
             select(Review)
             .where(Review.status == status)
@@ -26,9 +24,7 @@ class ReviewRepository(CRUDRepository[Review]):
         )
         return (await self.session.scalars(stmt)).all()
 
-    async def list_for_location(
-        self, location_id: UUID, limit: int = 100
-    ) -> Sequence[Review]:
+    async def list_for_location(self, location_id: UUID, limit: int = 100) -> Sequence[Review]:
         stmt = (
             select(Review)
             .where(Review.location_id == location_id)

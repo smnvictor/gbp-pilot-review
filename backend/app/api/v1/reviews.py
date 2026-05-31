@@ -66,9 +66,7 @@ async def list_pending(
 
 
 @router.get("/{review_id}", response_model=ReviewPublic)
-async def get_review(
-    review_id: UUID, session: SessionDep, user: CurrentUser
-) -> ReviewPublic:
+async def get_review(review_id: UUID, session: SessionDep, user: CurrentUser) -> ReviewPublic:
     review = await ReviewRepository(session).get(review_id)
     if review is None:
         raise HTTPException(404)

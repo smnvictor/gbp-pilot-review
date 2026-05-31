@@ -24,9 +24,7 @@ class User(Base, TimestampMixin, SoftDeleteMixin):
         TIMESTAMP(timezone=True), nullable=True
     )
     mfa_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
-    last_login_at: Mapped[datetime | None] = mapped_column(
-        TIMESTAMP(timezone=True), nullable=True
-    )
+    last_login_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)
     client_id: Mapped[UUID | None] = mapped_column(
         ForeignKey("clients.id", ondelete="SET NULL"), nullable=True
     )

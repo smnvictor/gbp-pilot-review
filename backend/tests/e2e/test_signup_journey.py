@@ -18,15 +18,11 @@ async def test_full_signup_login_me_journey(client: AsyncClient) -> None:
     assert body["email"] == email
     assert body["client_id"]
 
-    r = await client.post(
-        "/api/v1/auth/login", json={"email": email, "password": password}
-    )
+    r = await client.post("/api/v1/auth/login", json={"email": email, "password": password})
     assert r.status_code == 200, r.text
     access = r.json()["access_token"]
 
-    me = await client.get(
-        "/api/v1/me", headers={"Authorization": f"Bearer {access}"}
-    )
+    me = await client.get("/api/v1/me", headers={"Authorization": f"Bearer {access}"})
     assert me.status_code == 200
     assert me.json()["email"] == email
 
@@ -44,7 +40,5 @@ async def test_login_with_bad_password_returns_401(client: AsyncClient) -> None:
         json={"email": email, "password": "Password123!", "business_name": "X"},
     )
     assert r.status_code == 201
-    r = await client.post(
-        "/api/v1/auth/login", json={"email": email, "password": "wrong"}
-    )
+    r = await client.post("/api/v1/auth/login", json={"email": email, "password": "wrong"})
     assert r.status_code == 401

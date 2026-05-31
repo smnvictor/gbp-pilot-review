@@ -9,9 +9,7 @@ from app.models.enums import (
 )
 
 # Fields persisted on the Client row (AI personalization) rather than client_settings.
-CLIENT_PROFILE_FIELDS = frozenset(
-    {"tone", "business_context", "always_mention", "never_mention"}
-)
+CLIENT_PROFILE_FIELDS = frozenset({"tone", "business_context", "always_mention", "never_mention"})
 
 
 class ClientSettingsPublic(BaseModel):

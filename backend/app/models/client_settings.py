@@ -33,12 +33,8 @@ class ClientSettings(Base, TimestampMixin):
         nullable=False,
         default=PublishDelayRange.range_1d_2d,
     )
-    publish_window_start: Mapped[time] = mapped_column(
-        Time, nullable=False, default=time(9, 0)
-    )
-    publish_window_end: Mapped[time] = mapped_column(
-        Time, nullable=False, default=time(21, 0)
-    )
+    publish_window_start: Mapped[time] = mapped_column(Time, nullable=False, default=time(9, 0))
+    publish_window_end: Mapped[time] = mapped_column(Time, nullable=False, default=time(21, 0))
     publish_window_timezone: Mapped[str] = mapped_column(
         String, nullable=False, default="Europe/Paris"
     )

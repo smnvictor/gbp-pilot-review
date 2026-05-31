@@ -14,12 +14,20 @@ pytestmark = pytest.mark.integration
 
 def _payload(event_type: str, client_id: Any, **attrs: Any) -> dict[str, Any]:
     return {
-        "meta": {"event_id": f"evt-{event_type}", "event_name": event_type, "custom_data": {"client_id": str(client_id)}},
-        "data": {"type": "subscriptions", "id": "sub-1", "attributes": {
-            "subscription_id": "sub-1",
-            "customer_id": "cust-1",
-            **attrs,
-        }},
+        "meta": {
+            "event_id": f"evt-{event_type}",
+            "event_name": event_type,
+            "custom_data": {"client_id": str(client_id)},
+        },
+        "data": {
+            "type": "subscriptions",
+            "id": "sub-1",
+            "attributes": {
+                "subscription_id": "sub-1",
+                "customer_id": "cust-1",
+                **attrs,
+            },
+        },
     }
 
 
@@ -78,13 +86,24 @@ async def test_handle_event_idempotent(db_session: AsyncSession) -> None:
 
     from app.models.webhook_event import WebhookEvent
 
-    rows = (await db_session.scalars(select(WebhookEvent).where(WebhookEvent.event_id == "evt-once"))).all()
+    rows = (
+        await db_session.scalars(select(WebhookEvent).where(WebhookEvent.event_id == "evt-once"))
+    ).all()
     # Only one persisted event row
     assert len(rows) == 1
 
 
 async def test_tier_inferred_from_product_name() -> None:
-    assert SubscriptionService._tier_from_attrs({"product_name": "Business Annual"}) == SubscriptionTier.business
-    assert SubscriptionService._tier_from_attrs({"product_name": "Pro Monthly"}) == SubscriptionTier.pro
-    assert SubscriptionService._tier_from_attrs({"product_name": "Starter"}) == SubscriptionTier.starter
+    assert (
+        SubscriptionService._tier_from_attrs({"product_name": "Business Annual"})
+        == SubscriptionTier.business
+    )
+    assert (
+        SubscriptionService._tier_from_attrs({"product_name": "Pro Monthly"})
+        == SubscriptionTier.pro
+    )
+    assert (
+        SubscriptionService._tier_from_attrs({"product_name": "Starter"})
+        == SubscriptionTier.starter
+    )
     assert SubscriptionService._tier_from_attrs({}) == SubscriptionTier.starter

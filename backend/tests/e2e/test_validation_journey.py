@@ -18,29 +18,21 @@ async def test_user_validates_and_schedules_response(
     review = build_review(location_id=location.id)
     db_session.add(review)
     await db_session.flush()
-    response = build_response(
-        review_id=review.id, status=ResponseStatus.pending_validation_client
-    )
+    response = build_response(review_id=review.id, status=ResponseStatus.pending_validation_client)
     db_session.add(response)
     await db_session.flush()
 
     # GET
-    r = await client.get(
-        f"/api/v1/responses/{response.id}", headers=auth_headers(user.id)
-    )
+    r = await client.get(f"/api/v1/responses/{response.id}", headers=auth_headers(user.id))
     assert r.status_code == 200, r.text
     assert r.json()["status"] == "pending_validation_client"
 
     # Approve
-    r = await client.post(
-        f"/api/v1/responses/{response.id}/approve", headers=auth_headers(user.id)
-    )
+    r = await client.post(f"/api/v1/responses/{response.id}/approve", headers=auth_headers(user.id))
     assert r.status_code == 200, r.text
     assert r.json()["status"] == "scheduled"
 
     # Cancel (within undo window)
-    r = await client.post(
-        f"/api/v1/responses/{response.id}/cancel", headers=auth_headers(user.id)
-    )
+    r = await client.post(f"/api/v1/responses/{response.id}/cancel", headers=auth_headers(user.id))
     assert r.status_code == 200, r.text
     assert r.json()["status"] == "cancelled"

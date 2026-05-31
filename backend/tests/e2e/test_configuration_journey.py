@@ -10,9 +10,7 @@ from tests.factories import create_full_client
 pytestmark = pytest.mark.e2e
 
 
-async def test_user_updates_settings(
-    client: AsyncClient, db_session: AsyncSession
-) -> None:
+async def test_user_updates_settings(client: AsyncClient, db_session: AsyncSession) -> None:
     _c, user, _settings, _sub, _loc, _cred = await create_full_client(db_session)
 
     r = await client.get("/api/v1/settings", headers=auth_headers(user.id))

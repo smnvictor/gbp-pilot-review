@@ -2,7 +2,13 @@ from functools import lru_cache
 
 from lingua import IsoCode639_1, Language, LanguageDetectorBuilder
 
-_SUPPORTED = [Language.FRENCH, Language.ENGLISH, Language.SPANISH, Language.GERMAN, Language.ITALIAN]
+_SUPPORTED = [
+    Language.FRENCH,
+    Language.ENGLISH,
+    Language.SPANISH,
+    Language.GERMAN,
+    Language.ITALIAN,
+]
 
 
 @lru_cache(maxsize=1)

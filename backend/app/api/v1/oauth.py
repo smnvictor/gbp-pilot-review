@@ -50,8 +50,7 @@ async def oauth_status(session: SessionDep, user: CurrentUser) -> OAuthStatusRes
     credential = await OAuthRepository(session).get_by_client(user.client_id)
     locations = await LocationRepository(session).list_by_client(user.client_id)
     return OAuthStatusResponse(
-        connected=credential is not None
-        and credential.status == OAuthCredentialStatus.active,
+        connected=credential is not None and credential.status == OAuthCredentialStatus.active,
         status=credential.status.value if credential else None,
         expires_at=credential.expires_at.isoformat() if credential else None,
         locations=[
@@ -82,6 +81,7 @@ async def callback(
         raise HTTPException(status_code=400, detail="Invalid state token type")
 
     from uuid import UUID
+
     client_id = UUID(payload["sub"])
 
     service = OAuthService(session)

@@ -80,6 +80,7 @@ def _bind_correlation(task_id, task, args, kwargs, **_):  # type: ignore[no-unty
     cid = (kwargs or {}).pop("__correlation_id", None) or new_correlation_id()
     correlation_id_var.set(cid)
 
+
 @task_postrun.connect
 def _unbind_correlation(**_):  # type: ignore[no-untyped-def]
     correlation_id_var.set("-")

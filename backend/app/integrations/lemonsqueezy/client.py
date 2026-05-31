@@ -38,9 +38,7 @@ class LemonSqueezyClient:
                     }
                 },
                 "relationships": {
-                    "store": {
-                        "data": {"type": "stores", "id": settings.lemonsqueezy_store_id}
-                    },
+                    "store": {"data": {"type": "stores", "id": settings.lemonsqueezy_store_id}},
                     "variant": {"data": {"type": "variants", "id": variant_id}},
                 },
             }
@@ -52,7 +50,5 @@ class LemonSqueezyClient:
         except httpx.HTTPError as exc:
             raise LemonSqueezyError(str(exc)) from exc
         if response.status_code >= 400:
-            raise LemonSqueezyError(
-                f"Lemon Squeezy {response.status_code}: {response.text[:200]}"
-            )
+            raise LemonSqueezyError(f"Lemon Squeezy {response.status_code}: {response.text[:200]}")
         return str(response.json()["data"]["attributes"]["url"])

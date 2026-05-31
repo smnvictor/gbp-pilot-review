@@ -44,7 +44,9 @@ async def test_exchange_without_refresh_token_raises_400(
 
     mock_google_adapter.exchange_code = AsyncMock(
         return_value=GoogleTokenResponse(
-            access_token="ax", refresh_token=None, expires_in=3600,
+            access_token="ax",
+            refresh_token=None,
+            expires_in=3600,
             scope="https://www.googleapis.com/auth/business.manage",
         )
     )

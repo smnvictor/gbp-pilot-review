@@ -37,9 +37,7 @@ class PublicationService:
         self.client_settings = ClientSettingsRepository(session)
         self.oauth = OAuthRepository(session)
 
-    async def schedule_publication(
-        self, response_id: UUID, validated_by_user_id: UUID
-    ) -> Response:
+    async def schedule_publication(self, response_id: UUID, validated_by_user_id: UUID) -> Response:
         response = await self.responses.get(response_id)
         if response is None:
             raise HTTPException(404, "Response not found")
@@ -132,7 +130,9 @@ class PublicationService:
             response.status = ResponseStatus.scheduled
             response.failure_reason = f"OAuth revoked: {exc}"
             await self.session.commit()
-            logger.warning("Publication rolled back: OAuth revoked for response {rid}", rid=response.id)
+            logger.warning(
+                "Publication rolled back: OAuth revoked for response {rid}", rid=response.id
+            )
             return response
         except Exception as exc:
             response.status = ResponseStatus.failed

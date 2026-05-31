@@ -24,9 +24,7 @@ async def _seed_response(db_session: AsyncSession) -> tuple[Client, User, Respon
     review = build_review(location_id=location.id)
     db_session.add(review)
     await db_session.flush()
-    response = build_response(
-        review_id=review.id, status=ResponseStatus.pending_validation_client
-    )
+    response = build_response(review_id=review.id, status=ResponseStatus.pending_validation_client)
     db_session.add(response)
     await db_session.flush()
     return client, user, response
@@ -56,9 +54,7 @@ async def test_non_owner_gets_403(client: AsyncClient, db_session: AsyncSession)
     assert r.status_code == 403
 
 
-async def test_admin_bypasses_owner_check(
-    client: AsyncClient, db_session: AsyncSession
-) -> None:
+async def test_admin_bypasses_owner_check(client: AsyncClient, db_session: AsyncSession) -> None:
     _c, _user, response = await _seed_response(db_session)
     admin = build_user(role=UserRole.admin)
     db_session.add(admin)
