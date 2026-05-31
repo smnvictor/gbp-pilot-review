@@ -62,7 +62,7 @@ class ClaudeClient:
             if getattr(block, "type", None) == "tool_use" and block.name == TOOL_NAME:
                 payload = block.input or {}
                 return LLMResponse(
-                    status=int(payload.get("status", 0)),
+                    status=1 if int(payload.get("status", 0)) == 1 else 0,
                     content=str(payload.get("content", "")),
                     details=payload.get("details", ""),
                     tokens_input=usage_in,
