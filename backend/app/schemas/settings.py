@@ -8,6 +8,11 @@ from app.models.enums import (
     ValidationMode,
 )
 
+# Fields persisted on the Client row (AI personalization) rather than client_settings.
+CLIENT_PROFILE_FIELDS = frozenset(
+    {"tone", "business_context", "always_mention", "never_mention"}
+)
+
 
 class ClientSettingsPublic(BaseModel):
     polling_frequency_minutes: int
@@ -21,8 +26,11 @@ class ClientSettingsPublic(BaseModel):
     digest_mode: bool
     digest_hour: int
     regex_blocklist: list[str]
-
-    model_config = {"from_attributes": True}
+    # Client AI personalization
+    tone: list[str]
+    business_context: str
+    always_mention: str
+    never_mention: str
 
 
 class ClientSettingsUpdate(BaseModel):
@@ -37,3 +45,8 @@ class ClientSettingsUpdate(BaseModel):
     digest_mode: bool | None = None
     digest_hour: int | None = Field(default=None, ge=0, le=23)
     regex_blocklist: list[str] | None = None
+    # Client AI personalization
+    tone: list[str] | None = None
+    business_context: str | None = Field(default=None, max_length=2000)
+    always_mention: str | None = Field(default=None, max_length=2000)
+    never_mention: str | None = Field(default=None, max_length=2000)

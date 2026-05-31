@@ -8,6 +8,19 @@ from app.models.prompt_version import PromptVersion
 from app.models.review import Review
 from app.repositories.prompt_version_repository import PromptVersionRepository
 
+TONE_LABELS: dict[str, str] = {
+    "Professionnel": "ton professionnel, formel et neutre, vouvoiement systématique",
+    "Chaleureux": "ton chaleureux, humain et empathique, remerciement appuyé",
+    "Concis": "ton concis, court et factuel, droit au but",
+}
+
+
+def _tone_instructions(client: Client) -> str:
+    parts = [TONE_LABELS.get(t, t) for t in (client.tone or [])]
+    structured = " ; ".join(parts)
+    free = client.tone_instructions or ""
+    return "\n".join(p for p in (structured, free) if p)
+
 
 class PromptService:
     def __init__(self, session: AsyncSession) -> None:
@@ -31,7 +44,9 @@ class PromptService:
         return Template(template).safe_substitute(
             business_name=client.business_name,
             business_context=client.business_context or "",
-            tone_instructions=client.tone_instructions or "",
+            tone_instructions=_tone_instructions(client),
+            always_mention=client.always_mention or "",
+            never_mention=client.never_mention or "",
             response_language=review.language or settings.language_override or "fr",
             review_rating=str(review.rating),
             review_comment=review.comment or "",
