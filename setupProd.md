@@ -419,6 +419,15 @@ NextAuth v5 en JWT pose un cookie `__Secure-authjs.session-token`. Vérifie qu'i
 
 ## Phase F — Smoke tests feature par feature
 
+### F.0 Front cleaning — actions de déploiement de la branche `feature/ui-overhaul`
+
+À faire **avant** les smoke tests, une fois la branche mergée/déployée :
+
+- [ ] **Variantes Lemon Squeezy** : créer/relever les 3 variant IDs (Starter/Pro/Business) dans le dashboard LS et renseigner `LEMONSQUEEZY_VARIANT_STARTER`, `LEMONSQUEEZY_VARIANT_PRO`, `LEMONSQUEEZY_VARIANT_BUSINESS` dans le `.env` de prod. Sans ça, `POST /api/v1/subscription/checkout` renvoie un **503** explicite (au lieu d'ouvrir le checkout).
+- [ ] **Migration DB** : `docker compose -f docker-compose.prod.yml run --rm api alembic upgrade head` → applique `0003` (colonnes `clients.tone`, `always_mention`, `never_mention`).
+- [ ] **Fuseau Celery** : le polling est désormais fixé à **11h/14h/17h/20h Europe/Paris** (Celery `timezone="Europe/Paris"`). Effet de bord : les crons de maintenance (`check_quota_thresholds` 09:00, `purge_expired_data` 03:15) passent aussi en heure de Paris. Décider si on les re-fixe en UTC ; sinon, juste vérifier que `beat` planifie aux bons horaires.
+- [ ] **Vérif post-deploy** : parcourir `CHECKLIST.md` (racine des deux repos).
+
 Exécute dans l'ordre, avec un compte de test (`test+<n>@pilot-review.com`) puis répète avec `victor.simon760@gmail.com`. Coche chaque ligne avant de passer à la suivante.
 
 | # | Test | Endpoint / Action | Critère de succès |
