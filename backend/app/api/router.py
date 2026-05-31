@@ -5,6 +5,7 @@ from app.api.v1 import (
     generation_preview,
     me,
     oauth,
+    onboarding,
     responses,
     reviews,
     subscription,
@@ -26,6 +27,7 @@ api_router = APIRouter(prefix="/api/v1")
 api_router.include_router(auth.router)
 api_router.include_router(me.router)
 api_router.include_router(oauth.router)
+api_router.include_router(onboarding.router)
 api_router.include_router(responses.router)
 api_router.include_router(reviews.router)
 api_router.include_router(settings_routes.router)
