@@ -15,7 +15,6 @@ CLIENT_PROFILE_FIELDS = frozenset(
 
 
 class ClientSettingsPublic(BaseModel):
-    polling_frequency_minutes: int
     publish_delay_range: PublishDelayRange
     publish_window_start: time
     publish_window_end: time
@@ -34,7 +33,6 @@ class ClientSettingsPublic(BaseModel):
 
 
 class ClientSettingsUpdate(BaseModel):
-    polling_frequency_minutes: int | None = Field(default=None, ge=15, le=1440 * 7)
     publish_delay_range: PublishDelayRange | None = None
     publish_window_start: time | None = None
     publish_window_end: time | None = None

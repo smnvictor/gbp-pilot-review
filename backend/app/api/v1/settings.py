@@ -16,7 +16,6 @@ router = APIRouter(prefix="/settings", tags=["settings"])
 
 def _public(settings: ClientSettings, client: Client) -> ClientSettingsPublic:
     return ClientSettingsPublic(
-        polling_frequency_minutes=settings.polling_frequency_minutes,
         publish_delay_range=settings.publish_delay_range,
         publish_window_start=settings.publish_window_start,
         publish_window_end=settings.publish_window_end,
