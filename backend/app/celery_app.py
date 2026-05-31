@@ -29,7 +29,8 @@ celery_app.conf.update(
     task_serializer="json",
     accept_content=["json"],
     result_serializer="json",
-    timezone="UTC",
+    # Europe/Paris so the fixed polling slots below fire at local business hours.
+    timezone="Europe/Paris",
     enable_utc=True,
     task_always_eager=settings.celery_task_always_eager,
     task_eager_propagates=settings.celery_task_always_eager,
@@ -46,7 +47,9 @@ celery_app.conf.update(
     beat_schedule={
         "dispatch-pollings": {
             "task": "app.tasks.polling_tasks.dispatch_pollings",
-            "schedule": 60 * 15,
+            # Fixed 4 runs/day (11h, 14h, 17h, 20h Europe/Paris) — polling frequency
+            # is no longer client-configurable.
+            "schedule": crontab(hour="11,14,17,20", minute=0),
         },
         "dispatch-publications": {
             "task": "app.tasks.publication_tasks.dispatch_due_publications",

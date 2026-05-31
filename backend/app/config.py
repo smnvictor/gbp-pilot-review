@@ -39,6 +39,10 @@ class Settings(BaseSettings):
     lemonsqueezy_api_key: SecretStr
     lemonsqueezy_webhook_secret: SecretStr
     lemonsqueezy_store_id: str
+    # Lemon Squeezy variant IDs per plan tier (numeric IDs from the LS dashboard).
+    lemonsqueezy_variant_starter: str = ""
+    lemonsqueezy_variant_pro: str = ""
+    lemonsqueezy_variant_business: str = ""
 
     resend_api_key: SecretStr
     resend_from_email: str
@@ -58,6 +62,14 @@ class Settings(BaseSettings):
     @property
     def cors_origins_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+
+    def lemonsqueezy_variant_for_tier(self, tier: str) -> str:
+        """Resolve a plan tier (starter/pro/business) to its configured LS variant ID."""
+        return {
+            "starter": self.lemonsqueezy_variant_starter,
+            "pro": self.lemonsqueezy_variant_pro,
+            "business": self.lemonsqueezy_variant_business,
+        }.get(tier, "")
 
 
 @lru_cache(maxsize=1)
