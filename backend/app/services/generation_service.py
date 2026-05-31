@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from uuid import UUID
 
 from loguru import logger
@@ -5,15 +6,27 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.integrations.claude.adapter import LLMProvider, LLMRequest, LLMResponse
 from app.integrations.claude.client import ClaudeClient
+from app.models.client import Client
 from app.models.client_settings import ClientSettings
 from app.models.enums import ResponseSource, ResponseStatus, ReviewStatus, ValidationMode
+from app.models.prompt_version import PromptVersion
 from app.models.response import Response
+from app.models.review import Review
 from app.repositories.client_settings_repository import ClientSettingsRepository
 from app.repositories.location_repository import LocationRepository
 from app.repositories.response_repository import ResponseRepository
 from app.repositories.review_repository import ReviewRepository
 from app.services.prompt_service import PromptService
 from app.services.quota_service import QuotaExhaustedError, QuotaService
+
+
+@dataclass
+class PreviewResult:
+    content: str
+    ai_status: int
+    ai_details: str | None
+    tone: list[str]
+    business_context: str
 
 
 class GenerationService:
@@ -51,9 +64,7 @@ class GenerationService:
             raise
 
         version = await self.prompts.active_version()
-        from app.models.client import Client as ClientModel
-
-        client = await self.session.get(ClientModel, location.client_id)
+        client = await self.session.get(Client, location.client_id)
         if client is None:
             raise ValueError(f"Client {location.client_id} not found")
         user_prompt = self.prompts.render_user_prompt(
@@ -106,6 +117,38 @@ class GenerationService:
         await self.session.commit()
         await self.session.refresh(response)
         return response
+
+    async def generate_preview(
+        self,
+        *,
+        client: Client,
+        settings: ClientSettings,
+        review: Review,
+        version: PromptVersion,
+    ) -> PreviewResult:
+        """Dry-run generation: no quota consumed, no DB write, nothing published."""
+        user_prompt = self.prompts.render_user_prompt(
+            template=version.user_prompt_template,
+            client=client,
+            settings=settings,
+            review=review,
+        )
+        llm = await self.provider.generate(
+            LLMRequest(
+                system_prompt=version.system_prompt,
+                user_prompt=user_prompt,
+                model=version.model,
+                temperature=float(version.temperature),
+                max_tokens=version.max_tokens,
+            )
+        )
+        return PreviewResult(
+            content=llm.content,
+            ai_status=llm.status,
+            ai_details=llm.details or None,
+            tone=client.tone or [],
+            business_context=client.business_context or "",
+        )
 
     @staticmethod
     def _route(settings: ClientSettings, ai_status: int, details: str | None) -> ResponseStatus:

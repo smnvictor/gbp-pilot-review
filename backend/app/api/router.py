@@ -1,6 +1,15 @@
 from fastapi import APIRouter
 
-from app.api.v1 import auth, me, oauth, responses, reviews, subscription, webhooks
+from app.api.v1 import (
+    auth,
+    generation_preview,
+    me,
+    oauth,
+    responses,
+    reviews,
+    subscription,
+    webhooks,
+)
 from app.api.v1 import settings as settings_routes
 from app.api.v1.admin import (
     clients as admin_clients,
@@ -23,6 +32,7 @@ api_router.include_router(settings_routes.router)
 api_router.include_router(validation_queue.router)
 api_router.include_router(monitoring.router)
 api_router.include_router(subscription.router)
+api_router.include_router(generation_preview.router)
 api_router.include_router(webhooks.router)
 api_router.include_router(admin_clients.router)
 api_router.include_router(admin_deletions.router)
