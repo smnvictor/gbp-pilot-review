@@ -13,7 +13,10 @@ def test_render_user_prompt_substitutes_all_vars() -> None:
     client = SimpleNamespace(
         business_name="Resto X",
         business_context="petit resto familial",
+        tone=["Professionnel"],
         tone_instructions="ton chaleureux",
+        always_mention="",
+        never_mention="",
     )
     settings = SimpleNamespace(language_override=None)
     review = SimpleNamespace(
@@ -34,7 +37,14 @@ def test_render_user_prompt_substitutes_all_vars() -> None:
 
 def test_render_falls_back_to_settings_language_override() -> None:
     template = "$response_language"
-    client = SimpleNamespace(business_name="X", business_context="", tone_instructions="")
+    client = SimpleNamespace(
+        business_name="X",
+        business_context="",
+        tone=[],
+        tone_instructions="",
+        always_mention="",
+        never_mention="",
+    )
     settings = SimpleNamespace(language_override="en")
     review = SimpleNamespace(language=None, rating=4, comment="ok", reviewer_first_name=None)
     service = PromptService.__new__(PromptService)
