@@ -42,7 +42,7 @@ os.environ.setdefault("LEMONSQUEEZY_API_KEY", "load-ls-key")
 os.environ.setdefault("LEMONSQUEEZY_WEBHOOK_SECRET", "load-ls-webhook")
 os.environ.setdefault("LEMONSQUEEZY_STORE_ID", "load-store")
 os.environ.setdefault("RESEND_API_KEY", "load-resend-key")
-os.environ.setdefault("RESEND_FROM_EMAIL", "load@example.test")
+os.environ.setdefault("RESEND_FROM_EMAIL", "load@example.com")
 
 
 async def _stage_polling(client_id: UUID, n_reviews: int) -> tuple[float, list[UUID]]:

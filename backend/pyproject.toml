@@ -63,6 +63,11 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+# The session-scoped db_engine fixture opens asyncpg connections that cannot be
+# shared across event loops; pin fixtures and tests to a single session-scoped
+# loop so they reuse the same loop as the engine.
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
 testpaths = ["tests"]
 addopts = "-ra --strict-markers --cov=app --cov-report=term-missing"
 markers = [

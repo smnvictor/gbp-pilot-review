@@ -7,7 +7,7 @@ pytestmark = pytest.mark.e2e
 
 
 async def test_full_signup_login_me_journey(client: AsyncClient) -> None:
-    email = "journey+signup@example.test"
+    email = "journey+signup@example.com"
     password = "Password123!"
     r = await client.post(
         "/api/v1/auth/signup",
@@ -34,10 +34,10 @@ async def test_full_signup_login_me_journey(client: AsyncClient) -> None:
 
 
 async def test_login_with_bad_password_returns_401(client: AsyncClient) -> None:
-    email = "journey+badpass@example.test"
+    email = "journey+badpass@example.com"
     r = await client.post(
         "/api/v1/auth/signup",
-        json={"email": email, "password": "Password123!", "business_name": "X"},
+        json={"email": email, "password": "Password123!", "business_name": "Badpass Biz"},
     )
     assert r.status_code == 201
     r = await client.post("/api/v1/auth/login", json={"email": email, "password": "wrong"})

@@ -50,8 +50,11 @@ async def test_circuit_breaker_opens_on_repeated_failures() -> None:
     def boom() -> None:
         raise RuntimeError("google down")
 
+    # The call that reaches the threshold opens the circuit and raises
+    # CircuitBreakerError directly (instead of re-raising the underlying error),
+    # so accept either exception while the breaker is still closing.
     for _ in range(fails_needed):
-        with pytest.raises(RuntimeError):
+        with pytest.raises((RuntimeError, pybreaker.CircuitBreakerError)):
             google_breaker.call(boom)
     assert google_breaker.current_state == "open"
     with pytest.raises(pybreaker.CircuitBreakerError):
