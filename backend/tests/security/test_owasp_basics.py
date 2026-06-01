@@ -18,7 +18,7 @@ async def test_a02_password_hash_never_returned_on_signup(
     res = await client.post(
         "/api/v1/auth/signup",
         json={
-            "email": "no-leak@example.test",
+            "email": "no-leak@example.com",
             "password": "Password123!",
             "business_name": "No Leak Co",
         },
@@ -52,7 +52,7 @@ async def test_a07_login_with_wrong_credentials_returns_401(
 ) -> None:
     res = await client.post(
         "/api/v1/auth/login",
-        json={"email": "nobody@example.test", "password": "wrong-password"},
+        json={"email": "nobody@example.com", "password": "wrong-password"},
     )
     assert res.status_code in (401, 422)
 

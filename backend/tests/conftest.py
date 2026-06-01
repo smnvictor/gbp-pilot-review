@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 from httpx import ASGITransport, AsyncClient
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -35,7 +36,7 @@ os.environ.setdefault("LEMONSQUEEZY_API_KEY", "test-ls-key")
 os.environ.setdefault("LEMONSQUEEZY_WEBHOOK_SECRET", "test-ls-webhook")
 os.environ.setdefault("LEMONSQUEEZY_STORE_ID", "test-store")
 os.environ.setdefault("RESEND_API_KEY", "test-resend-key")
-os.environ.setdefault("RESEND_FROM_EMAIL", "noreply@example.test")
+os.environ.setdefault("RESEND_FROM_EMAIL", "noreply@example.com")
 os.environ.setdefault("CELERY_TASK_ALWAYS_EAGER", "true")
 
 
@@ -57,6 +58,10 @@ async def db_engine() -> AsyncIterator[AsyncEngine]:
 
     engine = create_async_engine(str(get_settings().database_url), echo=False, future=True)
     async with engine.begin() as conn:
+        # create_all bypasses migrations, so Postgres extensions the models rely
+        # on (citext for User.email) must be created explicitly here — migration
+        # 0001 does this for real deployments.
+        await conn.execute(text("CREATE EXTENSION IF NOT EXISTS citext"))
         await conn.run_sync(Base.metadata.create_all)
     try:
         yield engine

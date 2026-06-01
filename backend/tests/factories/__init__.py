@@ -50,7 +50,7 @@ def build_user(
     password: str = "Password123!",
 ) -> User:
     return User(
-        email=email or f"{_unique('user')}@example.test",
+        email=email or f"{_unique('user')}@example.com",
         password_hash=hash_password(password),
         role=role,
         client_id=client_id,
@@ -183,7 +183,7 @@ def build_oauth_credential(
 
 
 def build_notification_preference(
-    *, client_id: UUID, email: str = "alerts@example.test"
+    *, client_id: UUID, email: str = "alerts@example.com"
 ) -> NotificationPreference:
     return NotificationPreference(client_id=client_id, email_address=email)
 

@@ -30,7 +30,7 @@ async def test_user_repository_get_by_email(db_session: AsyncSession) -> None:
     assert fetched is not None
     assert fetched.id == user.id
 
-    assert await UserRepository(db_session).get_by_email("missing@example.test") is None
+    assert await UserRepository(db_session).get_by_email("missing@example.com") is None
 
 
 async def test_review_repository_get_by_google_id(db_session: AsyncSession) -> None:

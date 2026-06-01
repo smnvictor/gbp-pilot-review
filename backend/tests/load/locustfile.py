@@ -33,7 +33,7 @@ class ClientUser(HttpUser):
     access_token: str = ""
 
     def on_start(self) -> None:
-        email = f"loadtest-{uuid.uuid4().hex[:8]}@example.test"
+        email = f"loadtest-{uuid.uuid4().hex[:8]}@example.com"
         password = "Password123!"
         signup = self.client.post(
             "/api/v1/auth/signup",
