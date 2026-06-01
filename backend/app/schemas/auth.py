@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field
@@ -36,7 +37,7 @@ class UserPublic(BaseModel):
     id: UUID
     email: EmailStr
     role: str
-    email_verified_at: str | None = None
+    email_verified_at: datetime | None = None
     client_id: UUID | None = None
 
     model_config = {"from_attributes": True}
