@@ -73,7 +73,7 @@ def create_app() -> FastAPI:
         is_production=settings.environment == "production",
     )
 
-    @app.get("/healthz", tags=["meta"])
+    @app.api_route("/healthz", methods=["GET", "HEAD"], tags=["meta"])
     async def healthz() -> dict[str, str]:
         return {"status": "ok"}
 
