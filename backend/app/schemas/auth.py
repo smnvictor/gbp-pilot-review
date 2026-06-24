@@ -39,6 +39,9 @@ class UserPublic(BaseModel):
     role: str
     email_verified_at: datetime | None = None
     client_id: UUID | None = None
+    # True once the client has finished (or skipped) the onboarding wizard.
+    # Populated in GET /me; defaults to False for the signup/verify responses.
+    onboarding_completed: bool = False
 
     model_config = {"from_attributes": True}
 
